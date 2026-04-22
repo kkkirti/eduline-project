@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rural Remote Classroom</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .header {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 20px 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .logo i {
+        font-size: 2.5em;
+        color: #667eea;
+      }
+
+      .logo h1 {
+        color: #333;
+        font-size: 1.8em;
+        font-weight: 700;
+      }
+
+      .status-bar {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+
+      .connection-status {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 15px;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 0.9em;
+      }
+
+      .online {
+        background: #d4edda;
+        color: #155724;
+      }
+
+      .offline {
+        background: #f8d7da;
+        color: #721c24;
+      }
+
+      .nav-tabs {
+        display: flex;
+        gap: 5px;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 15px;
+        padding: 8px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        flex-wrap: wrap;
+      }
+
+      .tab {
+        padding: 12px 20px;
+        border: none;
+        background: transparent;
+        color: #666;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 120px;
+        justify-content: center;
+      }
+
+      .tab:hover {
+        background: rgba(102, 126, 234, 0.1);
+        color: #667eea;
+      }
+
+      .tab.active {
+        background: #667eea;
+        color: white;
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+      }
+
+      .content {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+      }
+
+      .tab-content {
+        display: none;
+      }
+
+      .tab-content.active {
+        display: block;
+        animation: fadeIn 0.5s ease;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 25px;
+        margin-top: 25px;
+      }
+
+      .card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+      }
+
+      .card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #667eea, #764ba2);
+      }
+
+      .card h3 {
+        color: #333;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 1.3em;
+      }
+
+      .card h3 i {
+        color: #667eea;
+        font-size: 1.2em;
+      }
+
+      .btn {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        font-size: 0.95em;
+        margin: 8px 8px 8px 0;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+      }
+
+      .btn-secondary {
+        background: #6c757d;
+      }
+
+      .btn-success {
+        background: #28a745;
+      }
+
+      .btn-danger {
+        background: #dc3545;
+      }
+
+      .live-class {
+        background: linear-gradient(135deg, #ff6b6b, #ffa726);
+        color: white;
+        position: relative;
+      }
+
+      .live-class::before {
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      .live-indicator {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 15px;
+      }
+
+      .pulse {
+        width: 12px;
+        height: 12px;
+        background: #ff4757;
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        50% {
+          transform: scale(1.2);
+          opacity: 0.7;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      .progress-bar {
+        width: 100%;
+        height: 8px;
+        background: #e9ecef;
+        border-radius: 4px;
+        overflow: hidden;
+        margin: 15px 0;
+      }
+
+      .progress {
+        height: 100%;
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        border-radius: 4px;
+        transition: width 0.3s ease;
+      }
+
+      .assignment-list,
+      .lecture-list,
+      .discussion-list {
+        list-style: none;
+        padding: 0;
+      }
+
+      .assignment-list li,
+      .lecture-list li,
+      .discussion-list li {
+        padding: 15px;
+        border-left: 4px solid #667eea;
+        margin-bottom: 15px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+      }
+
+      .assignment-list li:hover,
+      .lecture-list li:hover,
+      .discussion-list li:hover {
+        background: #e9ecef;
+        transform: translateX(5px);
+      }
+
+      .due-date,
+      .lecture-duration,
+      .discussion-time {
+        font-size: 0.9em;
+        color: #666;
+        margin-top: 8px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .offline-banner {
+        background: #f8d7da;
+        color: #721c24;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 600;
+      }
+
+      .search-box {
+        width: 100%;
+        padding: 15px 20px;
+        border: 2px solid #e9ecef;
+        border-radius: 25px;
+        font-size: 1em;
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+      }
+
+      .search-box:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .stat-card {
+        text-align: center;
+        padding: 20px;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+      }
+
+      .stat-number {
+        font-size: 2.5em;
+        font-weight: bold;
+        color: #667eea;
+        margin-bottom: 8px;
+      }
+
+      .bandwidth-indicator {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 5px 12px;
+        background: rgba(40, 167, 69, 0.1);
+        color: #28a745;
+        border-radius: 15px;
+        font-size: 0.9em;
+        font-weight: 600;
+      }
+
+      @media (max-width: 768px) {
+        .header {
+          flex-direction: column;
+          gap: 15px;
+        }
+
+        .nav-tabs {
+          justify-content: center;
+        }
+
+        .tab {
+          min-width: auto;
+          flex: 1;
+        }
+
+        .grid {
+          grid-template-columns: 1fr;
+        }
+
+        .stats-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <div class="logo">
+          <i class="fas fa-graduation-cap"></i>
+          <div>
+            <h1>Rural Remote Classroom</h1>
+            <p style="margin: 0; color: #666; font-size: 0.9em">
+              Connecting Rural Students to Quality Education
+            </p>
+          </div>
+        </div>
+        <div class="status-bar">
+          <div class="bandwidth-indicator">
+            <i class="fas fa-wifi"></i>
+            <span id="bandwidth">Good Connection</span>
+          </div>
+          <div class="connection-status online" id="connectionStatus">
+            <i class="fas fa-circle"></i>
+            <span>Online</span>
+          </div>
+        </div>
+      </header>
+
+      <nav class="nav-tabs">
+        <button class="tab active" onclick="switchTab('dashboard')">
+          <i class="fas fa-home"></i>
+          Dashboard
+        </button>
+        <button class="tab" onclick="switchTab('live-classes')">
+          <i class="fas fa-video"></i>
+          Live Classes
+        </button>
+        <button class="tab" onclick="switchTab('lectures')">
+          <i class="fas fa-play-circle"></i>
+          Recorded Lectures
+        </button>
+        <button class="tab" onclick="switchTab('assignments')">
+          <i class="fas fa-tasks"></i>
+          Assignments
+        </button>
+        <button class="tab" onclick="switchTab('discussions')">
+          <i class="fas fa-comments"></i>
+          Discussions
+        </button>
+        <button class="tab" onclick="switchTab('resources')">
+          <i class="fas fa-book"></i>
+          Resources
+        </button>
+      </nav>
+
+      <div class="content">
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-content active">
+          <h2 style="margin-bottom: 25px; color: #333">
+            <i
+              class="fas fa-chart-line"
+              style="color: #667eea; margin-right: 10px"
+            ></i>
+            Student Dashboard
+          </h2>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-number">12</div>
+              <div>Active Courses</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">85%</div>
+              <div>Attendance Rate</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">7</div>
+              <div>Pending Assignments</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">92%</div>
+              <div>Average Score</div>
+            </div>
+          </div>
+
+          <div class="grid">
+            <div class="card live-class">
+              <div class="live-indicator">
+                <div class="pulse"></div>
+                <strong>LIVE NOW</strong>
+              </div>
+              <h3>
+                <i class="fas fa-chalkboard-teacher"></i>Advanced Mathematics
+              </h3>
+              <p>Prof. Sarah Johnson is teaching Calculus II</p>
+              <p style="margin: 10px 0"><strong>45 students online</strong></p>
+              <button class="btn" onclick="joinLiveClass()">
+                <i class="fas fa-video"></i>
+                Join Live Class
+              </button>
+            </div>
+
+            <div class="card">
+              <h3><i class="fas fa-calendar-alt"></i>Today's Schedule</h3>
+              <ul style="list-style: none; padding: 0">
+                <li style="padding: 10px 0; border-bottom: 1px solid #eee">
+                  <strong>10:00 AM - Physics Lab</strong><br />
+                  <span style="color: #666">Virtual Experiment Session</span>
+                </li>
+                <li style="padding: 10px 0; border-bottom: 1px solid #eee">
+                  <strong>2:00 PM - English Literature</strong><br />
+                  <span style="color: #666">Poetry Analysis Discussion</span>
+                </li>
+                <li style="padding: 10px 0">
+                  <strong>4:00 PM - Computer Science</strong><br />
+                  <span style="color: #666">Programming Assignment Review</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="card">
+              <h3><i class="fas fa-exclamation-triangle"></i>Urgent Tasks</h3>
+              <ul style="list-style: none; padding: 0">
+                <li style="padding: 8px 0; color: #dc3545">
+                  <i class="fas fa-clock"></i>
+                  <strong>Chemistry Report due in 2 days</strong>
+                </li>
+                <li style="padding: 8px 0; color: #ffc107">
+                  <i class="fas fa-calendar"></i>
+                  <strong>Math Quiz tomorrow at 3 PM</strong>
+                </li>
+                <li style="padding: 8px 0; color: #28a745">
+                  <i class="fas fa-check"></i>
+                  <strong>History Essay submitted</strong>
+                </li>
+              </ul>
+            </div>
+
+            <div class="card">
+              <h3><i class="fas fa-download"></i>Offline Content</h3>
+              <p>
+                Download content for offline study when connectivity is poor
+              </p>
+              <div class="progress-bar">
+                <div class="progress" style="width: 60%"></div>
+              </div>
+              <p style="font-size: 0.9em; color: #666; margin: 10px 0">
+                3.2 GB downloaded, 2.1 GB remaining
+              </p>
+              <button
+                class="btn btn-secondary"
+                onclick="manageOfflineContent()"
+              >
+                <i class="fas fa-cog"></i>
+                Manage Downloads
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Classes Tab -->
+        <div id="live-classes" class="tab-content">
+          <h2 style="margin-bottom: 25px; color: #333">
+            <i
+              class="fas fa-video"
+              style="color: #667eea; margin-right: 10px"
+            ></i>
+            Live Classes
+          </h2>
+
+          <div class="grid">
+            <div class="card live-class">
+              <div class="live-indicator">
+                <div class="pulse"></div>
+                <strong>LIVE NOW - 47 students</strong>
+              </div>
+              <h3>Advanced Mathematics</h3>
+              <p>Calculus II - Derivatives and Applications</p>
+              <p><strong>Prof. Sarah Johnson</strong></p>
+              <button class="btn" onclick="joinLiveClass()">
+                <i class="fas fa-video"></i>
+                Join Class
+              </button>
+            </div>
+
+            <div class="card">
+              <h3><i class="fas fa-clock"></i>Physics Laboratory</h3>
+              <p>Virtual Lab Session - Electromagnetic Experiments</p>
+              <p><strong>Dr. Michael Chen</strong></p>
+              <p style="color: #666">Starts in 25 minutes (2:00 PM)</p>
+              <button class="btn btn-secondary" onclick="setReminder()">
+                <i class="fas fa-bell"></i>
+                Set Reminder
+              </button>
+            </div>
+
+            <div class="card">
+              <h3><i class="fas fa-users"></i>English Literature Discussion</h3>
+              <p>Poetry Analysis - Romantic Era Literature</p>
+              <p><strong>Prof. Emma Wilson</strong></p>
+              <p style="color: #666">Today at 4:00 PM</p>
+              <button class="btn btn-secondary">
+                <i class="fas fa-calendar-plus"></i>
+                Add to Calendar
+              </button>
+            </div>
+          </div>
+
+          <div
+            style="
+              margin-top: 30px;
+              padding: 20px;
+              background: #f8f9fa;
+              border-radius: 10px;
+            "
+          >
+            <h4>
+              <i class="fas fa-info-circle" style="color: #17a2b8"></i> Class
+              Settings for Low Bandwidth
+            </h4>
+            <p>Optimized for rural internet connections:</p>
+            <ul style="margin-left: 20px">
+              <li>Automatic quality adjustment based on connection speed</li>
+              <li>Audio-only mode available when video streaming is slow</li>
+              <li>Chat-based participation when voice is not possible</li>
+              <li>Recording available for later viewing</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Recorded Lectures Tab -->
+        <div id="lectures" class="tab-content">
+          <h2 style="margin-bottom: 25px; color: #333">
+            <i
+              class="fas fa-play-circle"
+              style="color: #667eea; margin-right: 10px"
+            ></i>
+            Recorded Lectures
+          </h2>
+
+          <input
+            type="text"
+            class="search-box"
+            placeholder="Search lectures by subject, professor, or topic..."
+            id="lectureSearch"
+          />
+
+          <div class="grid">
+            <div class="card">
+              <h3><i class="fas fa-calculator"></i>Calculus II - Session 12</h3>
+              <p>Integration by Parts and Advanced Techniques</p>
+              <div class="lecture-duration">
+                <i class="fas fa-clock"></i>
+                <span>Duration: 1h 25min</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress" style="width: 75%"></div>
+              </div>
+              <p style="font-size: 0.9em; margin: 10px 0">
+                Watched 75% - Resume from 1:03:45
+              </p>
+              <button class="btn" onclick="playLecture('calc-12')">
+                <i class="fas fa-play"></i>
+                Continue Watching
+              </button>
+              <button
+                class="btn btn-secondary"
+                onclick="downloadLecture('calc-12')"
+              >
+                <i class="fas fa-download"></i>
+                Download
+              </button>
+            </div>
+
+            <div class="card">
+              <h3>
+                <i class="fas fa-atom"></i>Physics - Electromagnetic Waves
+              </h3>
+              <p>Wave Properties, Interference, and Applications</p>
+              <div class="lecture-duration">
+                <i class="fas fa-clock"></i>
+                <span>Duration: 58min</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress" style="width: 100%"></div>
+              </div>
+              <p style="font-size: 0.9em; margin: 10px 0; color: #28a745">
+                Completed
+              </p>
+              <button class="btn btn-success">
+                <i class="fas fa-redo"></i>
+                Rewatch
+              </button>
+              <button class="btn btn-secondary">
+                <i class="fas fa-file-pdf"></i>
+                Notes PDF
+              </button>
+            </div>
+
+            <div class="card">
+              <h3><i class="fas fa-code"></i>Programming Fundamentals</h3>
+              <p>Object-Oriented Programming Concepts</p>
+              <div class="lecture-duration">
+                <i class="fas fa-clock"></i>
+                <span>Duration: 1h 12min</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress" style="width: 0%"></div>
+              </div>
+              <p style="font-size: 0.9em; margin: 10px 0">Not started</p>
+              <button class="btn" onclick="playLecture('prog-basic')">
+                <i class="fas fa-play"></i>
+                Start Watching
+              </button>
+              <button
+                class="btn btn-secondary"
+                onclick="downloadLecture('prog-basic')"
+              >
+                <i class="fas fa-download"></i>
+                Download
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Assignments Tab -->
+        <div id="assignments" class="tab-content">
+          <h2 style="margin-bottom: 25px; color: #333">
+            <i
+              class="fas fa-tasks"
+              style="color: #667eea; margin-right: 10px"
+            ></i>
+            Assignments
+          </h2>
+
+          <ul class="assignment-list">
+            <li style="border-left-color: #dc3545">
+              <strong>Chemistry Lab Report</strong>
+              <p>
+                Analyze the results from the virtual acid-base titration
+                experiment
+              </p>
+              <div class="due-date">
+                <i
+                  class="fas fa-exclamation-triangle"
+                  style="color: #dc3545"
+                ></i>
+                <span style="color: #dc3545">Due: Tomorrow, 11:59 PM</span>
+              </div>
+              <div style="margin-top: 15px">
+                <button class="btn btn-danger">
+                  <i class="fas fa-edit"></i>
+                  Submit Assignment
+                </button>
+                <button class="btn btn-secondary">
+                  <i class="fas fa-file-pdf"></i>
+                  Instructions
+                </button>
+              </div>
+            </li>
+
+            <li style="border-left-color: #ffc107">
+              <strong>Mathematics Problem Set 8</strong>
+              <p>Integration techniques and applications - 15 problems</p>
+              <div class="due-date">
+                <i class="fas fa-clock" style="color: #ffc107"></i>
+                <span>Due: Friday, March 15, 11:59 PM</span>
+              </div>
+              <div style="margin-top: 15px">
+                <button class="btn">
+                  <i class="fas fa-edit"></i>
+                  Start Assignment
+                </button>
+                <button class="btn btn-secondary">
+                  <i class="fas fa-download"></i>
+                  Download Problems
+                </button>
+              </div>
+            </li>
+
+            <li style="border-left-color: #28a745">
+              <strong>English Literature Essay</strong>
+              <p>Analysis of themes in Romantic poetry - 1500 words</p>
+              <div class="due-date">
+                <i class="fas fa-check-circle" style="color: #28a745"></i>
+                <span style="color: #28a745">Submitted - Grade: A- (92%)</span>
+              </div>
+              <div style="margin-top: 15px">
+                <button class="btn btn-success">
+                  <i class="fas fa-eye"></i>
+                  View Feedback
+                </button>
+                <button class="btn btn-secondary">
+                  <i class="fas fa-download"></i>
+                  Download Submission
+                </button>
+              </div>
+            </li>
+
+            <li>
+              <strong>Programming Project</strong>
+              <p>
+                Create a student management system using Python and database
+              </p>
+              <div class="due-date">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Due: Next Wednesday, March 20, 11:59 PM</span>
+              </div>
+              <div style="margin-top: 15px">
+                <button class="btn">
+                  <i class="fas fa-code"></i>
+                  Open Code Editor
+                </button>
+                <button class="btn btn-secondary">
+                  <i class="fas fa-file-alt"></i>
+                  Requirements
+                </button>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Discussions Tab -->
+        <div id="discussions" class="tab-content">
+          <h2 style="margin-bottom: 25px; color: #333">
+            <i
+              class="fas fa-comments"
+              style="color: #667eea; margin-right: 10px"
+            ></i>
+            Discussion Forums
+          </h2>
+
+          <div class="grid">
+            <div class="card">
+              <h3><i class="fas fa-fire"></i>Hot Topics</h3>
+              <ul class="discussion-list">
+                <li>
+                  <strong>Quantum Physics Applications</strong>
+                  <p>
+                    Discussion on practical applications of quantum mechanics
+                  </p>
+                  <div class="discussion-time">
+                    <i class="fas fa-comments"></i>
+                    <span>23 replies • Last: 2 hours ago</span>
+                  </div>
+                </li>
+                <li>
+                  <strong>Climate Change Solutions</strong>
+                  <p>Student perspectives on environmental challenges</p>
+                  <div class="discussion-time">
+                    <i class="fas fa-comments"></i>
+                    <span>18 replies • Last: 4 hours ago</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            <div class="card">
+              <h3><i class="fas fa-question-circle"></i>Study Groups</h3>
+              <ul class="discussion-list">
+                <li>
+                  <strong>Calculus Study Group</strong>
+                  <p>Weekly problem-solving sessions</p>
+                  <div class="discussion-time">
+                    <i class="fas fa-users"></i>
+                    <span>12 members • Next: Tomorrow 7 PM</span>
+                  </div>
+                </li>
+                <li>
+                  <strong>Programming Peer Help</strong>
+                  <p>Code review and debugging assistance</p>
+                  <div class="discussion-time">
+                    <i class="fas fa-users"></i>
+                    <span>8 members • Active now</span>
+                  </div>
+                </li>
+              </ul>
+              <button class="btn">
+                <i class="fas fa-plus"></i>
+                Create Study Group
+              </button>
+            </div>
+
+            <div class="card">
+              <h3><i class="fas fa-bell"></i>Announcements</h3>
+              <ul class="discussion-list">
+                <li>
+                  <strong>Midterm Schedule Released</strong>
+                  <p>Check your exam dates and locations</p>
+                  <div class="discussion-time">
+                    <i class="fas fa-clock"></i>
+                    <span>Posted: Yesterday</span>
+                  </div>
+                </li>
+                <li>
+                  <strong>New Virtual Lab Equipment</strong>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
