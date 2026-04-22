@@ -59,3 +59,8 @@ cd eduline-backend
 npm install
 npm run dev
 ```
+```bash
+cd course-marketplace-frontend
+npm install
+npm run dev
+```
